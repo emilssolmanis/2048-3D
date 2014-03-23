@@ -1,8 +1,17 @@
-(function(window) {
+define(['jquery', 'glMatrix'], function($, glMatrix) {
     var document = window.document;
-    var $ = window.$;
+    var mat4 = glMatrix.mat4;
 
     var gl;
+    var shaderProgram;
+    var mvMatrix = mat4.create();
+    var mvMatrixStack = [];
+    var pMatrix = mat4.create();
+    var cubeVertexPositionBuffer;
+    var cubeVertexColorBuffer;
+    var cubeVertexIndexBuffer;
+    var rCube = 0;
+    var lastTime = 0;
 
     function initGL(canvas) {
         try {
@@ -11,6 +20,7 @@
             gl.viewportHeight = canvas.height;
         } catch (e) {
         }
+
         if (!gl) {
             alert("Could not initialise WebGL, sorry :-(");
         }
@@ -51,8 +61,6 @@
         return shader;
     }
 
-    var shaderProgram;
-
     function initShaders() {
         var fragmentShader = getShader(gl, "test.frag");
         var vertexShader = getShader(gl, "test.vert");
@@ -78,10 +86,6 @@
         shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
     }
 
-    var mvMatrix = mat4.create();
-    var mvMatrixStack = [];
-    var pMatrix = mat4.create();
-
     function mvPushMatrix() {
         var copy = mat4.create();
         mat4.copy(copy, mvMatrix);
@@ -104,71 +108,10 @@
         return degrees * Math.PI / 180;
     }
 
-    var pyramidVertexPositionBuffer;
-    var pyramidVertexColorBuffer;
-    var cubeVertexPositionBuffer;
-    var cubeVertexColorBuffer;
-    var cubeVertexIndexBuffer;
-
     function initBuffers() {
-        pyramidVertexPositionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, pyramidVertexPositionBuffer);
-        var vertices = [
-            // Front face
-            0.0, 1.0, 0.0,
-            -1.0, -1.0, 1.0,
-            1.0, -1.0, 1.0,
-
-            // Right face
-            0.0, 1.0, 0.0,
-            1.0, -1.0, 1.0,
-            1.0, -1.0, -1.0,
-
-            // Back face
-            0.0, 1.0, 0.0,
-            1.0, -1.0, -1.0,
-            -1.0, -1.0, -1.0,
-
-            // Left face
-            0.0, 1.0, 0.0,
-            -1.0, -1.0, -1.0,
-            -1.0, -1.0, 1.0
-        ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-        pyramidVertexPositionBuffer.itemSize = 3;
-        pyramidVertexPositionBuffer.numItems = 12;
-
-        pyramidVertexColorBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, pyramidVertexColorBuffer);
-        var colors = [
-            // Front face
-            1.0, 0.0, 0.0, 1.0,
-            0.0, 1.0, 0.0, 1.0,
-            0.0, 0.0, 1.0, 1.0,
-
-            // Right face
-            1.0, 0.0, 0.0, 1.0,
-            0.0, 0.0, 1.0, 1.0,
-            0.0, 1.0, 0.0, 1.0,
-
-            // Back face
-            1.0, 0.0, 0.0, 1.0,
-            0.0, 1.0, 0.0, 1.0,
-            0.0, 0.0, 1.0, 1.0,
-
-            // Left face
-            1.0, 0.0, 0.0, 1.0,
-            0.0, 0.0, 1.0, 1.0,
-            0.0, 1.0, 0.0, 1.0
-        ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-        pyramidVertexColorBuffer.itemSize = 4;
-        pyramidVertexColorBuffer.numItems = 12;
-
-
         cubeVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
-        vertices = [
+        var vertices = [
             // Front face
             -1.0, -1.0, 1.0,
             1.0, -1.0, 1.0,
@@ -211,7 +154,7 @@
 
         cubeVertexColorBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexColorBuffer);
-        colors = [
+        var colors = [
             [1.0, 0.0, 0.0, 1.0], // Front face
             [1.0, 1.0, 0.0, 1.0], // Back face
             [0.0, 1.0, 0.0, 1.0], // Top face
@@ -245,35 +188,13 @@
         cubeVertexIndexBuffer.numItems = 36;
     }
 
-    var rPyramid = 0;
-    var rCube = 0;
-
     function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         mat4.perspective(pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
-
         mat4.identity(mvMatrix);
-
-        mat4.translate(mvMatrix, mvMatrix, [-1.5, 0.0, -8.0]);
-
-        mvPushMatrix();
-        mat4.rotate(mvMatrix, mvMatrix, degToRad(rPyramid), [0, 1, 0]);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, pyramidVertexPositionBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, pyramidVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, pyramidVertexColorBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, pyramidVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-        setMatrixUniforms();
-        gl.drawArrays(gl.TRIANGLES, 0, pyramidVertexPositionBuffer.numItems);
-
-        mvPopMatrix();
-
-
-        mat4.translate(mvMatrix, mvMatrix, [3.0, 0.0, 0.0]);
+        mat4.translate(mvMatrix, mvMatrix, [0.0, 0.0, -10.0]);
 
         mvPushMatrix();
         mat4.rotate(mvMatrix, mvMatrix, degToRad(rCube), [1, 1, 1]);
@@ -291,14 +212,10 @@
         mvPopMatrix();
     }
 
-    var lastTime = 0;
-
     function animate() {
         var timeNow = new Date().getTime();
         if (lastTime !== 0) {
             var elapsed = timeNow - lastTime;
-
-            rPyramid += (90 * elapsed) / 1000.0;
             rCube -= (75 * elapsed) / 1000.0;
         }
         lastTime = timeNow;
@@ -310,17 +227,17 @@
         animate();
     }
 
-    function webGLStart() {
-        var canvas = document.getElementById("lesson04-canvas");
-        initGL(canvas);
-        initShaders();
-        initBuffers();
+    return {
+        webGLStart: function() {
+            var canvas = document.getElementById("lesson04-canvas");
+            initGL(canvas);
+            initShaders();
+            initBuffers();
 
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        gl.enable(gl.DEPTH_TEST);
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.enable(gl.DEPTH_TEST);
 
-        tick();
-    }
-
-    $(document).ready(webGLStart);
-})(window);
+            tick();
+        }
+    };
+});

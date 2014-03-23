@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
     "use strict";
+    require('time-grunt')(grunt);
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         bower: {
@@ -20,22 +22,13 @@ module.exports = function(grunt) {
                         console: true
                     }
                 },
-                src: ['assets/js/*.js']
-            }
-        },
-        concat: {
-            options: {
-                separator: ';\n'
-            },
-            js: {
-                src: ['vendor/js/**/*.js', 'assets/js/*.js'],
-                dest: 'dist/js-concat/<%= pkg.name %>.js'
+                src: ['src/js/*.js']
             }
         },
         uglify: {
             dist: {
                 files: {
-                    'dist/js-min/<%= pkg.name %>.min.js': ['<%= concat.js.dest %>']
+                    'dist/js-min/<%= pkg.name %>.min.js': ['dist/js-required/<%= pkg.name %>.js']
                 }
             }
         },
@@ -45,21 +38,21 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         flatten: true,
-                        src: ['<%= concat.js.dest %>'],
+                        src: ['dist/js-required/<%= pkg.name %>.js'],
                         dest: 'dist/public/js/',
                         filter: 'isFile'
                     },
                     {
                         expand: true,
                         flatten: true,
-                        src: ['assets/html/index.html'],
+                        src: ['src/html/index.html'],
                         dest: 'dist/public/',
                         filter: 'isFile'
                     },
                     {
                         expand: true,
                         flatten: true,
-                        src: ['assets/shaders/*.glsl'],
+                        src: ['src/shaders/*.glsl'],
                         dest: 'dist/public/shaders/',
                         filter: 'isFile'
                     },
@@ -75,16 +68,31 @@ module.exports = function(grunt) {
         },
         watch: {
             js: {
-                files: ['assets/js/*.js'],
-                tasks: ['jshint', 'concat', 'uglify', 'copy']
+                files: ['src/js/*.js'],
+                tasks: ['requirejs', 'uglify', 'copy']
             },
             shaders: {
-                files: ['assets/shaders/*.glsl'],
+                files: ['src/shaders/*.glsl'],
                 tasks: ['copy']
             },
             html: {
-                files: ['assets/html/*.html'],
+                files: ['src/html/*.html'],
                 tasks: ['copy']
+            }
+        },
+        requirejs: {
+            compile: {
+                options: {
+                    baseUrl: 'src/js',
+                    almond: true,
+                    name: 'main',
+                    optimize: 'none',
+                    out: 'dist/js-required/<%= pkg.name %>.js',
+                    paths: {
+                        glMatrix: '../../vendor/js/gl-matrix/gl-matrix',
+                        jquery: '../../vendor/js/jquery/jquery'
+                    }
+                }
             }
         }
     });
@@ -95,7 +103,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-requirejs');
     grunt.loadNpmTasks('grunt-include-replace');
 
-    grunt.registerTask('default', ['jshint', 'bower', 'concat', 'uglify', 'copy']);
+    grunt.registerTask('default', ['bower', 'requirejs', 'uglify', 'copy']);
+    grunt.registerTask('dist', ['jshint', 'default']);
 };
