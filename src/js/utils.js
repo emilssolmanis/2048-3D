@@ -1,4 +1,4 @@
-define(['jquery', 'glMatrix'], function($, glMatrix) {
+define(['jquery', 'glMatrix', 'game-cube'], function($, glMatrix, Cube) {
     var document = window.document;
     var mat4 = glMatrix.mat4;
 

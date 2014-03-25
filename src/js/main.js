@@ -1,4 +1,9 @@
-require(['jquery', 'utils'], function($, utils) {
+require(['jquery', 'game-scene'], function($, GameScene) {
     var document = window.document;
-    $(document).ready(utils.webGLStart);
+    var scene = new GameScene(500, 500);
+
+    $(document).ready(function() {
+        $(document.body).append(scene.getCanvas());
+        scene.run();
+    });
 });

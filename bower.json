@@ -2,16 +2,16 @@
   "name": "esmupliks-site",
   "version": "0.0.1",
   "dependencies": {
-    "gl-matrix": "https://github.com/toji/gl-matrix/archive/v2.2.1.tar.gz",
-    "jquery": "~2.1.0"
+    "jquery": "~2.1.0",
+    "threejs": "*"
   },
   "devDependencies": {},
   "exportsOverride": {
-      "gl-matrix": {
-          "js": "dist/gl-matrix.js"
-      },
-      "jquery": {
-          "js": "dist/jquery.js"
-      }
+    "jquery": {
+      "js": "dist/jquery.js"
+    },
+    "threejs": {
+        "js": "build/three.js"
+    }
   }
 }

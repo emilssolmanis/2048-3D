@@ -89,8 +89,13 @@ module.exports = function(grunt) {
                     optimize: 'none',
                     out: 'dist/js-required/<%= pkg.name %>.js',
                     paths: {
-                        glMatrix: '../../vendor/js/gl-matrix/gl-matrix',
-                        jquery: '../../vendor/js/jquery/jquery'
+                        jquery: '../../vendor/js/jquery/jquery',
+                        three: '../../vendor/js/threejs/three'
+                    },
+                    shim: {
+                        three: {
+                            exports: 'THREE'
+                        }
                     }
                 }
             }
