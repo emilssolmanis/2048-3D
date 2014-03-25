@@ -1,4 +1,4 @@
-define(['three', 'game-cube'], function(THREE, GameCube) {
+define(['three', 'game/cube', 'game/field'], function(THREE, GameCube, GameField) {
     /** Constructs a new scene
      *
      * @param width The canvas width
@@ -8,16 +8,20 @@ define(['three', 'game-cube'], function(THREE, GameCube) {
     var Scene = function(width, height) {
         this.scene = new THREE.Scene();
 
+        var field = new GameField();
+        this.scene.add(field.getMesh());
+
         this.cube = new GameCube();
         this.scene.add(this.cube.getMesh());
 
         this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-        this.camera.position.z = 5;
-        this.camera.position.y = 1;
-        this.camera.position.x = 1;
+        this.camera.position.z = 10;
+        this.camera.position.y = 2;
+        this.camera.position.x = 2;
 
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(width, height);
+        this.renderer.setClearColor(0xeeeeee, 1);
     };
 
     /** Gets the scene's <canvas> element.
