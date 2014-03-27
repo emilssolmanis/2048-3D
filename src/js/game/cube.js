@@ -4,15 +4,23 @@ define(['three'], function(THREE) {
     /** Encapsulates the game cubes logic.
      *
      * @constructor
+     * @name GameCube
      */
-    var GameCube = function() {
+    var GameCube = function(x, y, z) {
+        x = x || 0;
+        y = y || 0;
+        z = z || 0;
+
         var geometry = new THREE.CubeGeometry(1, 1, 1);
         var material = new THREE.MeshBasicMaterial({
             color: 0x00ff00,
             opacity: 0.5,
             transparent: true
         });
-        this.mesh = new THREE.Mesh(geometry, material);
+        var mesh = new THREE.Mesh(geometry, material);
+        mesh.position.x = x;
+        mesh.position.y = y;
+        mesh.position.z = z;
 
         var wireGeometry = new THREE.CubeGeometry(1.05, 1.05, 1.05);
         var wireMaterial = new THREE.MeshBasicMaterial({
@@ -21,9 +29,10 @@ define(['three'], function(THREE) {
             wireframeLinewidth: 5
         });
         var wireMesh = new THREE.Mesh(wireGeometry, wireMaterial);
-        this.mesh.add(wireMesh);
+        mesh.add(wireMesh);
 
         this._animating = false;
+        this.mesh = mesh;
     };
 
     /** Returns the cube's Mesh object

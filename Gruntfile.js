@@ -111,6 +111,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-requirejs');
     grunt.loadNpmTasks('grunt-include-replace');
 
-    grunt.registerTask('default', ['bower', 'requirejs', 'uglify', 'copy']);
-    grunt.registerTask('dist', ['jshint', 'default']);
+    grunt.registerTask('default', ['bower', 'requirejs', 'copy']);
+    grunt.registerTask('dist', ['jshint', 'bower', 'requirejs', 'uglify', 'copy']);
 };

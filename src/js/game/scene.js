@@ -4,65 +4,95 @@ define(['three', 'game/cube', 'game/field'], function(THREE, GameCube, GameField
      * @param width The canvas width
      * @param height The canvas height
      * @constructor
+     * @name GameScene
      */
-    var Scene = function(width, height) {
-        this.scene = new THREE.Scene();
+    var GameScene = function(width, height) {
+        var scene = new THREE.Scene();
 
         var field = new GameField();
-        this.scene.add(field.getMesh());
+        scene.add(field.getMesh());
 
-        this.cube = new GameCube();
-        this.scene.add(this.cube.getMesh());
+        field.add(new GameCube());
+        field.add(new GameCube(0, 1, 1.5));
 
-        this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-        this.camera.position.z = 10;
-        this.camera.position.y = 2;
-        this.camera.position.x = 2;
+        var camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
+        camera.position.z = 10;
+        camera.position.y = 2;
+        camera.position.x = 2;
 
-        this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize(width, height);
-        this.renderer.setClearColor(0xeeeeee, 1);
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(width, height);
+        renderer.setClearColor(0xeeeeee, 1);
+
+        this.field = field;
+        this.scene = scene;
+        this.camera = camera;
+        this.renderer = renderer;
     };
 
     /** Gets the scene's <canvas> element.
      *
      * @returns {canvas}
      */
-    Scene.prototype.getCanvas = function() {
+    GameScene.prototype.getCanvas = function() {
         return this.renderer.domElement;
     };
 
     /** Runs this scene's render loop.
      */
-    Scene.prototype.run = function() {
+    GameScene.prototype.run = function() {
         var self = this;
 
         function handleKeyDown(event) {
-            // 37 L, 39 R, 38 U, 40 D
-            if (event.keyCode === 37) {
-                self.cube.animate(-1, 0, 0);
-            } else if (event.keyCode === 39) {
-                self.cube.animate(1, 0, 0);
-            } else if (event.keyCode === 38) {
-                self.cube.animate(0, 1, 0);
-            } else if (event.keyCode === 40) {
-                self.cube.animate(0, -1, 0);
+            /*
+            Numpad
+
+                7 8 9
+                4 5 6
+                1 2 3
+
+            is
+
+                103 104 105
+                100 101 102
+                97  98  99
+             */
+            if (event.keyCode === 100) {
+                self.field.getCubes().forEach(function(c) {
+                    c.animate(-1, 0, 0);
+                });
+            } else if (event.keyCode === 102) {
+                self.field.getCubes().forEach(function(c) {
+                    c.animate(1, 0, 0);
+                });
+            } else if (event.keyCode === 105) {
+                self.field.getCubes().forEach(function(c) {
+                    c.animate(0, 1, 0);
+                });
+            } else if (event.keyCode === 99) {
+                self.field.getCubes().forEach(function(c) {
+                    c.animate(0, -1, 0);
+                });
+            } else if (event.keyCode == 104) {
+                self.field.getCubes().forEach(function(c) {
+                    c.animate(0, 0, -1);
+                });
+            } else if (event.keyCode == 98) {
+                self.field.getCubes().forEach(function(c) {
+                    c.animate(0, 0, 1);
+                });
             }
         }
 
-        function handleKeyUp(event) {
-        }
-
         window.document.onkeydown = handleKeyDown;
-        window.document.onkeyup = handleKeyUp;
 
         function _run() {
             requestAnimationFrame(_run);
-            self.cube.frame();
+            self.field.frame();
             self.renderer.render(self.scene, self.camera);
         }
         _run();
     };
 
-    return Scene;
+    return GameScene;
 });
