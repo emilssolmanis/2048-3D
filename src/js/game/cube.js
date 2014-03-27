@@ -1,10 +1,12 @@
 define(['three'], function(THREE) {
     var animationLength = 300;
 
-    /** Encapsulates the game cubes logic.
+    /** Constructs a GameCube
      *
+     * @param x - the initial X
+     * @param y - the initial Y
+     * @param z - the initial Z
      * @constructor
-     * @name GameCube
      */
     var GameCube = function(x, y, z) {
         x = x || 0;

@@ -4,16 +4,12 @@ define(['three', 'game/cube', 'game/field'], function(THREE, GameCube, GameField
      * @param width The canvas width
      * @param height The canvas height
      * @constructor
-     * @name GameScene
      */
     var GameScene = function(width, height) {
         var scene = new THREE.Scene();
 
         var field = new GameField();
         scene.add(field.getMesh());
-
-        field.add(new GameCube());
-        field.add(new GameCube(0, 1, 1.5));
 
         var camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
         camera.position.z = 10;
@@ -58,29 +54,17 @@ define(['three', 'game/cube', 'game/field'], function(THREE, GameCube, GameField
                 97  98  99
              */
             if (event.keyCode === 100) {
-                self.field.getCubes().forEach(function(c) {
-                    c.animate(-1, 0, 0);
-                });
+                self.field.minusX();
             } else if (event.keyCode === 102) {
-                self.field.getCubes().forEach(function(c) {
-                    c.animate(1, 0, 0);
-                });
+                self.field.plusX();
             } else if (event.keyCode === 105) {
-                self.field.getCubes().forEach(function(c) {
-                    c.animate(0, 1, 0);
-                });
+                self.field.plusY();
             } else if (event.keyCode === 99) {
-                self.field.getCubes().forEach(function(c) {
-                    c.animate(0, -1, 0);
-                });
+                self.field.minusY();
             } else if (event.keyCode == 104) {
-                self.field.getCubes().forEach(function(c) {
-                    c.animate(0, 0, -1);
-                });
+                self.field.minusZ();
             } else if (event.keyCode == 98) {
-                self.field.getCubes().forEach(function(c) {
-                    c.animate(0, 0, 1);
-                });
+                self.field.plusZ();
             }
         }
 
