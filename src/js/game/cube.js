@@ -37,6 +37,14 @@ define(['three'], function(THREE) {
         this.mesh = mesh;
     };
 
+    /** Get whether this cube is animating
+     *
+     * @returns {boolean} Whether this cube is in the middle of an animatino now
+     */
+    GameCube.prototype.isAnimating = function() {
+        return this._animating;
+    };
+
     /** Returns the cube's Mesh object
      *
      * @returns {THREE.Mesh}

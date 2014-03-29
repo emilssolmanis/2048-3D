@@ -1,3 +1,4 @@
+/** @namespace field */
 define(['three', 'game/cube'], function(THREE, GameCube) {
     /** Translates a field object array index into position coordinates
      *
@@ -7,31 +8,33 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
         var y = Math.floor(idx / 16);
         var z = Math.floor((idx % 16) / 4);
         var x = (idx % 16) % 4;
-        return [x, y, z];
+        return new THREE.Vector3(x, y, z);
     }
 
     /** Translates a discreet position vector to an index into the object array
      *
-     * @param {Array} pos - An [x, y, z] array
+     * @param {THREE.Vector3} pos - An [x, y, z] array
      */
     function posToIdx(pos) {
-        var x = pos[0];
-        var y = pos[1];
-        var z = pos[2];
-        return y * 16 + z * 4 + x;
+        return (pos.y * 16) + (pos.z) * 4 + (pos.x);
     }
 
+    /** Converts a single position to coordinate, since the scales are equal on all axis
+     *
+     * @param p  - The value to convert
+     * @returns {number} The value in GL space
+     */
     function posToCoord(p) {
         return (p + 1) * 0.1 + p;
     }
 
     /** Translates position vector into GL coordinate space
      *
-     * @param {Array} pos - discreet position coordinates
-     * @returns {Array} Position array mapped into GL coordinates
+     * @param {THREE.Vector3} pos - discreet position coordinates
+     * @returns {THREE.Vector3} Position array mapped into GL coordinates
      */
     function posToCoords(pos) {
-        return pos.map(posToCoord);
+        return new THREE.Vector3(posToCoord(pos.x), posToCoord(pos.y), posToCoord(pos.z));
     }
 
     /** Creates the playing field.
@@ -53,8 +56,8 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
         var firstPos = posToCoords(idxToPos(0));
         var secondPos = posToCoords(idxToPos(1));
         var cubes = [
-            new GameCube(firstPos[0], firstPos[1], firstPos[2]),
-            new GameCube(secondPos[0], secondPos[1], secondPos[2])
+            new GameCube(firstPos.x, firstPos.y, firstPos.z),
+            new GameCube(secondPos.x, secondPos.y, secondPos.z)
         ];
         cubes.forEach(function(c) {
             mesh.add(c.getMesh());
@@ -77,7 +80,21 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
     GameField.prototype.frame = function() {
         this.cubes.forEach(function(c) {
             c.frame();
-        })
+        });
+    };
+
+    /** Checks whether this field is animating currently
+     *
+     *
+     * @returns {boolean} - Whether this field is in the process of an animation
+     */
+    GameField.prototype.isAnimating = function() {
+        this.cubes.forEach(function(c) {
+            if (c.isAnimating()) {
+                return true;
+            }
+        });
+        return false;
     };
 
     GameField.prototype.plusX = function() {
@@ -85,11 +102,13 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
 
         this.cubes.forEach(function(c, i) {
             var pos = idxToPos(i);
-            c.animate(posToCoord(3) - posToCoord(pos[0]), 0, 0);
-            pos[0] = 3;
+            console.log('Curr pos for idx %s: %s', i, pos.toArray());
+            console.log('Animating, dX: %s', posToCoord(3) - posToCoord(pos.x));
+            c.animate(posToCoord(3) - posToCoord(pos.x), 0, 0);
+            pos.setX(3);
+            console.log('Setting new idx to %s', posToIdx(pos));
             newCubes[posToIdx(pos)] = c;
         });
-
 //        this.cubes = newCubes;
     };
 
@@ -104,8 +123,8 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
 
         this.cubes.forEach(function(c, i) {
             var pos = idxToPos(i);
-            c.animate(0, posToCoord(3) - posToCoord(pos[1]), 0);
-            pos[1] = 3;
+            c.animate(0, posToCoord(3) - posToCoord(pos.y), 0);
+            pos.y = 3;
 
             newCubes[posToIdx(pos)] = c;
         });
@@ -129,5 +148,11 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
         });
     };
 
-    return GameField;
+    return {
+        GameField: GameField,
+        idxToPos: idxToPos,
+        posToIdx: posToIdx,
+        posToCoord: posToCoord,
+        posToCoords: posToCoords
+    };
 });

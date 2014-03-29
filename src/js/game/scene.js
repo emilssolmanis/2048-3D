@@ -1,4 +1,4 @@
-define(['three', 'game/cube', 'game/field'], function(THREE, GameCube, GameField) {
+define(['three', 'game/cube', 'game/field'], function(THREE, GameCube, field) {
     /** Constructs a new scene
      *
      * @param width The canvas width
@@ -8,7 +8,7 @@ define(['three', 'game/cube', 'game/field'], function(THREE, GameCube, GameField
     var GameScene = function(width, height) {
         var scene = new THREE.Scene();
 
-        var field = new GameField();
+        var field = new field.GameField();
         scene.add(field.getMesh());
 
         var camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
@@ -40,6 +40,9 @@ define(['three', 'game/cube', 'game/field'], function(THREE, GameCube, GameField
         var self = this;
 
         function handleKeyDown(event) {
+            if (self.field.isAnimating()) {
+                return;
+            }
             /*
             Numpad
 

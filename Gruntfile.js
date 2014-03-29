@@ -68,7 +68,7 @@ module.exports = function(grunt) {
         },
         watch: {
             js: {
-                files: ['src/js/*.js'],
+                files: ['src/js/*.js', 'src/js/game/*.js'],
                 tasks: ['requirejs', 'uglify', 'copy']
             },
             shaders: {
