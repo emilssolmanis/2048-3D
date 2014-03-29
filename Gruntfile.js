@@ -99,6 +99,13 @@ module.exports = function(grunt) {
                     }
                 }
             }
+        },
+        mocha: {
+            browser: ['test/**/*.html'],
+            options: {
+                reporter: 'Nyan',
+                run: true
+            }
         }
     });
 
@@ -109,8 +116,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-requirejs');
-    grunt.loadNpmTasks('grunt-include-replace');
+    grunt.loadNpmTasks('grunt-mocha');
 
-    grunt.registerTask('default', ['bower', 'requirejs', 'copy']);
-    grunt.registerTask('dist', ['jshint', 'bower', 'requirejs', 'uglify', 'copy']);
+    grunt.registerTask('default', ['test', 'bower', 'requirejs', 'copy']);
+    grunt.registerTask('test', ['jshint', 'bower', 'mocha']);
+    grunt.registerTask('dist', ['test', 'bower', 'requirejs', 'uglify', 'copy']);
 };

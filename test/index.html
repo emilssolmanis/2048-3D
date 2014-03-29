@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8"/>
+    <script type="application/javascript" src="../vendor/js/chai/chai.js"></script>
+    <script type="application/javascript" src="../vendor/js/mocha/mocha.js"></script>
+    <script type="application/javascript" src="../vendor/js/requirejs/require.js"></script>
+    <script>
+        mocha.setup('bdd');
+    </script>
+
+    <link rel="stylesheet" href="../vendor/css/mocha/mocha.css"/>
+
+    <script type="application/javascript" src="config.js"></script>
+</head>
+<body>
+    <div id="mocha"></div>
+    <script type="text/javascript" src="GameFieldSpec.js"></script>
+    <script type="text/javascript">
+        mocha.run();
+    </script>
+</body>
+</html>

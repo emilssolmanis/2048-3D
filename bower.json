@@ -5,13 +5,27 @@
     "jquery": "~2.1.0",
     "threejs": "*"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "~1.18.2",
+    "chai": "~1.9.1",
+    "requirejs": "~2.1.11"
+  },
   "exportsOverride": {
     "jquery": {
       "js": "dist/jquery.js"
     },
     "threejs": {
-        "js": "build/three.js"
+      "js": "build/three.js"
+    },
+    "mocha": {
+      "js": "mocha.js",
+      "css": "mocha.css"
+    },
+    "chai": {
+      "js": "chai.js"
+    },
+    "requirejs": {
+      "js": "require.js"
     }
   }
 }
