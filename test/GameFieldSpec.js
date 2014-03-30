@@ -256,5 +256,42 @@ describe("GameField's coordinate translation tests", function() {
                 done();
             });
         });
+
+        it('should not move cubes any further after they are at max X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                gameField.add(0);
+
+                chai.assert.notOk(gameField.get(3));
+                chai.assert.ok(gameField.get(0));
+
+                gameField.plusX();
+
+                chai.assert.ok(gameField.get(3));
+                chai.assert.notOk(gameField.get(0));
+
+                var cubeMesh = gameField.get(3).getMesh();
+                var currPos = {
+                    x: cubeMesh.position.x,
+                    y: cubeMesh.position.y,
+                    z: cubeMesh.position.z
+                };
+
+                gameField.plusX();
+
+                chai.assert.ok(gameField.get(3));
+
+                var newCubeMesh = gameField.get(3).getMesh();
+                var newPos = {
+                    x: newCubeMesh.position.x,
+                    y: newCubeMesh.position.y,
+                    z: newCubeMesh.position.z
+                };
+
+                chai.assert.deepEqual(currPos, newPos);
+
+                done();
+            });
+        });
     });
 });
