@@ -68,6 +68,15 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
         this.mesh.add(cube.getMesh());
     };
 
+    /** Gets the GameCube at the queried position
+     *
+     * @param {number} idx - The index to get
+     * @returns {GameCube} The element at the given index
+     */
+    GameField.prototype.get = function(idx) {
+        return this.cubes[idx];
+    };
+
     /** Gets this field's underlying mesh object
      *
      * @returns {THREE.Mesh}
@@ -110,7 +119,8 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
             console.log('Setting new idx to %s', posToIdx(pos));
             newCubes[posToIdx(pos)] = c;
         });
-//        this.cubes = newCubes;
+
+        this.cubes = newCubes;
     };
 
     GameField.prototype.minusX = function() {

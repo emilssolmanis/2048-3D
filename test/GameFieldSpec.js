@@ -73,8 +73,18 @@ describe("GameField's coordinate translation tests", function() {
     });
 
     describe('GameField.plusX(), move forward along X', function() {
-        it('should move all cubes to max X without collisions', function(done) {
+        it('should move single cube to max X', function(done) {
             require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                gameField.add(0);
+                chai.assert.notOk(gameField.get(3));
+                chai.assert.ok(gameField.get(0));
+
+                gameField.plusX();
+
+                chai.assert.ok(gameField.get(3));
+                chai.assert.notOk(gameField.get(0));
+
                 done();
             });
         });
