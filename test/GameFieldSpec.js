@@ -88,5 +88,173 @@ describe("GameField's coordinate translation tests", function() {
                 done();
             });
         });
+
+        it('should move multiple cubes with different Z positions to max X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 0, 1)),
+                    field.posToIdx(new THREE.Vector3(0, 0, 2))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(3, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(3, 0, 1)),
+                    field.posToIdx(new THREE.Vector3(3, 0, 2))
+                ];
+
+                startPositions.forEach(function(posIdx) {
+                    gameField.add(posIdx);
+                });
+
+                startPositions.forEach(function(posIdx) {
+                    chai.assert.ok(gameField.get(posIdx));
+                });
+
+                targetPositions.forEach(function(posIdx) {
+                    chai.assert.notOk(gameField.get(posIdx));
+                });
+
+                gameField.plusX();
+
+                startPositions.forEach(function(posIdx) {
+                    chai.assert.notOk(gameField.get(posIdx));
+                });
+
+                targetPositions.forEach(function(posIdx) {
+                    chai.assert.ok(gameField.get(posIdx));
+                });
+
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different Y positions to max X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 1, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 2, 0))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(3, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(3, 1, 0)),
+                    field.posToIdx(new THREE.Vector3(3, 2, 0))
+                ];
+
+                startPositions.forEach(function(posIdx) {
+                    gameField.add(posIdx);
+                });
+
+                startPositions.forEach(function(posIdx) {
+                    chai.assert.ok(gameField.get(posIdx));
+                });
+
+                targetPositions.forEach(function(posIdx) {
+                    chai.assert.notOk(gameField.get(posIdx));
+                });
+
+                gameField.plusX();
+
+                startPositions.forEach(function(posIdx) {
+                    chai.assert.notOk(gameField.get(posIdx));
+                });
+
+                targetPositions.forEach(function(posIdx) {
+                    chai.assert.ok(gameField.get(posIdx));
+                });
+
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different Y and Z positions to max X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 2)),
+                    field.posToIdx(new THREE.Vector3(0, 1, 1)),
+                    field.posToIdx(new THREE.Vector3(0, 2, 0))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(3, 0, 2)),
+                    field.posToIdx(new THREE.Vector3(3, 1, 1)),
+                    field.posToIdx(new THREE.Vector3(3, 2, 0))
+                ];
+
+                startPositions.forEach(function(posIdx) {
+                    gameField.add(posIdx);
+                });
+
+                startPositions.forEach(function(posIdx) {
+                    chai.assert.ok(gameField.get(posIdx));
+                });
+
+                targetPositions.forEach(function(posIdx) {
+                    chai.assert.notOk(gameField.get(posIdx));
+                });
+
+                gameField.plusX();
+
+                startPositions.forEach(function(posIdx) {
+                    chai.assert.notOk(gameField.get(posIdx));
+                });
+
+                targetPositions.forEach(function(posIdx) {
+                    chai.assert.ok(gameField.get(posIdx));
+                });
+
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different X, Y and Z positions to max X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(1, 0, 2)),
+                    field.posToIdx(new THREE.Vector3(2, 1, 1)),
+                    field.posToIdx(new THREE.Vector3(0, 2, 0))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(3, 0, 2)),
+                    field.posToIdx(new THREE.Vector3(3, 1, 1)),
+                    field.posToIdx(new THREE.Vector3(3, 2, 0))
+                ];
+
+                startPositions.forEach(function(posIdx) {
+                    gameField.add(posIdx);
+                });
+
+                startPositions.forEach(function(posIdx) {
+                    chai.assert.ok(gameField.get(posIdx));
+                });
+
+                targetPositions.forEach(function(posIdx) {
+                    chai.assert.notOk(gameField.get(posIdx));
+                });
+
+                gameField.plusX();
+
+                startPositions.forEach(function(posIdx) {
+                    chai.assert.notOk(gameField.get(posIdx));
+                });
+
+                targetPositions.forEach(function(posIdx) {
+                    chai.assert.ok(gameField.get(posIdx));
+                });
+
+                done();
+            });
+        });
     });
 });
