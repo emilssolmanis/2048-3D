@@ -8,8 +8,12 @@ define(['three', 'game/cube', 'game/field'], function(THREE, GameCube, field) {
     var GameScene = function(width, height) {
         var scene = new THREE.Scene();
 
-        var field = new field.GameField();
-        scene.add(field.getMesh());
+        var gameField = new field.GameField();
+
+        gameField.add(0);
+        gameField.add(1);
+
+        scene.add(gameField.getMesh());
 
         var camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
         camera.position.z = 10;
@@ -20,7 +24,7 @@ define(['three', 'game/cube', 'game/field'], function(THREE, GameCube, field) {
         renderer.setSize(width, height);
         renderer.setClearColor(0xeeeeee, 1);
 
-        this.field = field;
+        this.field = gameField;
         this.scene = scene;
         this.camera = camera;
         this.renderer = renderer;

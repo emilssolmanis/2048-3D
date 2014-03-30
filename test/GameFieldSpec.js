@@ -71,4 +71,12 @@ describe("GameField's coordinate translation tests", function() {
             });
         });
     });
+
+    describe('GameField.plusX(), move forward along X', function() {
+        it('should move all cubes to max X without collisions', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                done();
+            });
+        });
+    });
 });

@@ -53,18 +53,19 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
 
         var mesh = new THREE.Mesh(geometry, material);
 
-        var firstPos = posToCoords(idxToPos(0));
-        var secondPos = posToCoords(idxToPos(1));
-        var cubes = [
-            new GameCube(firstPos.x, firstPos.y, firstPos.z),
-            new GameCube(secondPos.x, secondPos.y, secondPos.z)
-        ];
-        cubes.forEach(function(c) {
-            mesh.add(c.getMesh());
-        });
-
-        this.cubes = cubes;
+        this.cubes = [];
         this.mesh = mesh;
+    };
+
+    /** Adds a {GameCube} instance at the given index
+     *
+     * @param {number} idx - The index at which to add the cube
+     */
+    GameField.prototype.add = function(idx) {
+        var pos = posToCoords(idxToPos(idx));
+        var cube = new GameCube(pos.x, pos.y, pos.z);
+        this.cubes[idx] = cube;
+        this.mesh.add(cube.getMesh());
     };
 
     /** Gets this field's underlying mesh object
