@@ -293,5 +293,45 @@ describe("GameField's coordinate translation tests", function() {
                 done();
             });
         });
+
+        it('should not collapse game cubes arbitrarily', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(1, 0, 0))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(2, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(3, 0, 0))
+                ];
+
+                startPositions.forEach(function(posIdx) {
+                    gameField.add(posIdx);
+                });
+
+                startPositions.forEach(function(posIdx) {
+                    chai.assert.ok(gameField.get(posIdx));
+                });
+
+                targetPositions.forEach(function(posIdx) {
+                    chai.assert.notOk(gameField.get(posIdx));
+                });
+
+                gameField.plusX();
+
+                startPositions.forEach(function(posIdx) {
+                    chai.assert.notOk(gameField.get(posIdx));
+                });
+
+                targetPositions.forEach(function(posIdx) {
+                    chai.assert.ok(gameField.get(posIdx));
+                });
+
+                done();
+            });
+        });
     });
 });
