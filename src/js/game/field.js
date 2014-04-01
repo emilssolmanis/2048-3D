@@ -107,10 +107,13 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
         return false;
     };
 
-    /** Moves cubes in this field along the X axis in the positive direction
+    /** Makes a positive move along an axis
+     *
+     * @param axis - the axis to move along, 'x', 'y' or 'z'
+     * @private
      */
-    GameField.prototype.plusX = function() {
-        console.log('GameField.plusX()');
+    GameField.prototype._positiveMove = function(axis) {
+        console.log('GameField.plus%s()', axis.toUpperCase());
         var newCubes = [];
 
         var self = this;
@@ -120,17 +123,19 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
 
             var numCubesInFront = 0;
             var aboveIdx;
-            for (aboveIdx = pos.x + 1; aboveIdx < 4; aboveIdx++) {
-                if (self.cubes[posToIdx(new THREE.Vector3(aboveIdx, pos.y, pos.z))]) {
+            for (aboveIdx = pos[axis] + 1; aboveIdx < 4; aboveIdx++) {
+                var posVector = new THREE.Vector3();
+                posVector['set' + axis.toUpperCase()](aboveIdx);
+                if (self.cubes[posToIdx(posVector)]) {
                     numCubesInFront++;
                 }
             }
 
             console.log('Curr pos for idx %s: %s', i, pos.toArray());
-            console.log('Animating, dX: %s', posToCoord(3 - numCubesInFront) - posToCoord(pos.x));
+            console.log('Animating, dX: %s', posToCoord(3 - numCubesInFront) - posToCoord(pos[axis]));
 
-            c.animate(posToCoord(3 - numCubesInFront) - posToCoord(pos.x), 0, 0);
-            pos.setX(3 - numCubesInFront);
+            c.animate(posToCoord(3 - numCubesInFront) - posToCoord(pos[axis]), 0, 0);
+            pos['set' + axis.toUpperCase()](3 - numCubesInFront);
 
             console.log('Setting new idx to %s', posToIdx(pos));
 
@@ -138,6 +143,12 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
         });
 
         this.cubes = newCubes;
+    };
+
+    /** Moves cubes in this field along the X axis in the positive direction
+     */
+    GameField.prototype.plusX = function() {
+        this._positiveMove('x');
     };
 
     /** Moves cubes in this field along the X axis in the negative direction
@@ -173,16 +184,10 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
         this.cubes = newCubes;
     };
 
+    /** Moves cubes in this field along the Y axis in the positive direction
+     */
     GameField.prototype.plusY = function() {
-        var newCubes = [];
-
-        this.cubes.forEach(function(c, i) {
-            var pos = idxToPos(i);
-            c.animate(0, posToCoord(3) - posToCoord(pos.y), 0);
-            pos.y = 3;
-
-            newCubes[posToIdx(pos)] = c;
-        });
+        this._positiveMove('y');
     };
 
     GameField.prototype.minusY = function() {

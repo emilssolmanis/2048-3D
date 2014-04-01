@@ -428,4 +428,165 @@ describe("GameField's coordinate translation tests", function() {
             });
         });
     });
+
+    describe('GameField.plusY(), move forward along Y', function() {
+        it('should move single cube to max Y', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                var targetIdx = field.posToIdx(new THREE.Vector3(0, 3, 0));
+                gameField.add(0);
+
+                chai.assert.ok(gameField.get(0));
+                chai.assert.notOk(gameField.get(targetIdx));
+
+                gameField.plusY();
+
+                chai.assert.notOk(gameField.get(0));
+                chai.assert.ok(gameField.get(targetIdx));
+
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different Z positions to max Y', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 0, 1)),
+                    field.posToIdx(new THREE.Vector3(0, 0, 2))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 3, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 3, 1)),
+                    field.posToIdx(new THREE.Vector3(0, 3, 2))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'plusY');
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different X positions to max Y', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(1, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(2, 0, 0))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 3, 0)),
+                    field.posToIdx(new THREE.Vector3(1, 3, 0)),
+                    field.posToIdx(new THREE.Vector3(2, 3, 0))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'plusY');
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different X and Z positions to max Y', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 2)),
+                    field.posToIdx(new THREE.Vector3(1, 0, 1)),
+                    field.posToIdx(new THREE.Vector3(2, 0, 0))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 3, 2)),
+                    field.posToIdx(new THREE.Vector3(1, 3, 1)),
+                    field.posToIdx(new THREE.Vector3(2, 3, 0))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'plusY');
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different X, Y and Z positions to max Y', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(2, 0, 2)),
+                    field.posToIdx(new THREE.Vector3(3, 1, 1)),
+                    field.posToIdx(new THREE.Vector3(1, 2, 0))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(2, 3, 2)),
+                    field.posToIdx(new THREE.Vector3(3, 3, 1)),
+                    field.posToIdx(new THREE.Vector3(1, 3, 0))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'plusY');
+                done();
+            });
+        });
+
+        it('should not move cubes any further after they are at max Y', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                var targetIdx = field.posToIdx(new THREE.Vector3(0, 3, 0));
+                gameField.add(0);
+
+                chai.assert.notOk(gameField.get(targetIdx));
+                chai.assert.ok(gameField.get(0));
+
+                gameField.plusY();
+
+                chai.assert.ok(gameField.get(targetIdx));
+                chai.assert.notOk(gameField.get(0));
+
+                var cubeMesh = gameField.get(targetIdx).getMesh();
+                var currPos = {
+                    x: cubeMesh.position.x,
+                    y: cubeMesh.position.y,
+                    z: cubeMesh.position.z
+                };
+
+                gameField.plusY();
+
+                chai.assert.ok(gameField.get(targetIdx));
+
+                var newCubeMesh = gameField.get(targetIdx).getMesh();
+                var newPos = {
+                    x: newCubeMesh.position.x,
+                    y: newCubeMesh.position.y,
+                    z: newCubeMesh.position.z
+                };
+
+                chai.assert.deepEqual(currPos, newPos);
+
+                done();
+            });
+        });
+
+        it('should not collapse game cubes arbitrarily', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 1, 0))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 2, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 3, 0))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'plusY');
+                done();
+            });
+        });
+    });
 });
