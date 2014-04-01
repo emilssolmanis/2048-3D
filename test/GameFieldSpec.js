@@ -7,7 +7,6 @@ describe("GameField's coordinate translation tests", function() {
                 done();
             });
         });
-
         it('should translate position (1, 0, 0) into index 1', function(done) {
             require(['three', 'game/field'], function(THREE, field) {
                 var res = field.posToIdx(new THREE.Vector3(1, 0, 0));
@@ -15,7 +14,6 @@ describe("GameField's coordinate translation tests", function() {
                 done();
             });
         });
-
         it('should translate position (0, 1, 0) into index 16', function(done) {
             require(['three', 'game/field'], function(THREE, field) {
                 var res = field.posToIdx(new THREE.Vector3(0, 1, 0));
@@ -23,7 +21,6 @@ describe("GameField's coordinate translation tests", function() {
                 done();
             });
         });
-
         it('should translate position (0, 0, 1) into index 4', function(done) {
             require(['three', 'game/field'], function(THREE, field) {
                 var res = field.posToIdx(new THREE.Vector3(0, 0, 1));
@@ -72,6 +69,30 @@ describe("GameField's coordinate translation tests", function() {
         });
     });
 
+    function testMovement(gameField, startPositions, targetPositions, move) {
+        startPositions.forEach(function(posIdx) {
+            gameField.add(posIdx);
+        });
+
+        startPositions.forEach(function(posIdx) {
+            chai.assert.ok(gameField.get(posIdx));
+        });
+
+        targetPositions.forEach(function(posIdx) {
+            chai.assert.notOk(gameField.get(posIdx));
+        });
+
+        gameField[move]();
+
+        startPositions.forEach(function(posIdx) {
+            chai.assert.notOk(gameField.get(posIdx));
+        });
+
+        targetPositions.forEach(function(posIdx) {
+            chai.assert.ok(gameField.get(posIdx));
+        });
+    }
+
     describe('GameField.plusX(), move forward along X', function() {
         it('should move single cube to max X', function(done) {
             require(['three', 'game/field'], function(THREE, field) {
@@ -92,7 +113,6 @@ describe("GameField's coordinate translation tests", function() {
         it('should move multiple cubes with different Z positions to max X', function(done) {
             require(['three', 'game/field'], function(THREE, field) {
                 var gameField = new field.GameField();
-
                 var startPositions = [
                     field.posToIdx(new THREE.Vector3(0, 0, 0)),
                     field.posToIdx(new THREE.Vector3(0, 0, 1)),
@@ -105,28 +125,7 @@ describe("GameField's coordinate translation tests", function() {
                     field.posToIdx(new THREE.Vector3(3, 0, 2))
                 ];
 
-                startPositions.forEach(function(posIdx) {
-                    gameField.add(posIdx);
-                });
-
-                startPositions.forEach(function(posIdx) {
-                    chai.assert.ok(gameField.get(posIdx));
-                });
-
-                targetPositions.forEach(function(posIdx) {
-                    chai.assert.notOk(gameField.get(posIdx));
-                });
-
-                gameField.plusX();
-
-                startPositions.forEach(function(posIdx) {
-                    chai.assert.notOk(gameField.get(posIdx));
-                });
-
-                targetPositions.forEach(function(posIdx) {
-                    chai.assert.ok(gameField.get(posIdx));
-                });
-
+                testMovement(gameField, startPositions, targetPositions, 'plusX');
                 done();
             });
         });
@@ -147,28 +146,7 @@ describe("GameField's coordinate translation tests", function() {
                     field.posToIdx(new THREE.Vector3(3, 2, 0))
                 ];
 
-                startPositions.forEach(function(posIdx) {
-                    gameField.add(posIdx);
-                });
-
-                startPositions.forEach(function(posIdx) {
-                    chai.assert.ok(gameField.get(posIdx));
-                });
-
-                targetPositions.forEach(function(posIdx) {
-                    chai.assert.notOk(gameField.get(posIdx));
-                });
-
-                gameField.plusX();
-
-                startPositions.forEach(function(posIdx) {
-                    chai.assert.notOk(gameField.get(posIdx));
-                });
-
-                targetPositions.forEach(function(posIdx) {
-                    chai.assert.ok(gameField.get(posIdx));
-                });
-
+                testMovement(gameField, startPositions, targetPositions, 'plusX');
                 done();
             });
         });
@@ -189,28 +167,7 @@ describe("GameField's coordinate translation tests", function() {
                     field.posToIdx(new THREE.Vector3(3, 2, 0))
                 ];
 
-                startPositions.forEach(function(posIdx) {
-                    gameField.add(posIdx);
-                });
-
-                startPositions.forEach(function(posIdx) {
-                    chai.assert.ok(gameField.get(posIdx));
-                });
-
-                targetPositions.forEach(function(posIdx) {
-                    chai.assert.notOk(gameField.get(posIdx));
-                });
-
-                gameField.plusX();
-
-                startPositions.forEach(function(posIdx) {
-                    chai.assert.notOk(gameField.get(posIdx));
-                });
-
-                targetPositions.forEach(function(posIdx) {
-                    chai.assert.ok(gameField.get(posIdx));
-                });
-
+                testMovement(gameField, startPositions, targetPositions, 'plusX');
                 done();
             });
         });
@@ -231,28 +188,7 @@ describe("GameField's coordinate translation tests", function() {
                     field.posToIdx(new THREE.Vector3(3, 2, 0))
                 ];
 
-                startPositions.forEach(function(posIdx) {
-                    gameField.add(posIdx);
-                });
-
-                startPositions.forEach(function(posIdx) {
-                    chai.assert.ok(gameField.get(posIdx));
-                });
-
-                targetPositions.forEach(function(posIdx) {
-                    chai.assert.notOk(gameField.get(posIdx));
-                });
-
-                gameField.plusX();
-
-                startPositions.forEach(function(posIdx) {
-                    chai.assert.notOk(gameField.get(posIdx));
-                });
-
-                targetPositions.forEach(function(posIdx) {
-                    chai.assert.ok(gameField.get(posIdx));
-                });
-
+                testMovement(gameField, startPositions, targetPositions, 'plusX');
                 done();
             });
         });
@@ -330,6 +266,164 @@ describe("GameField's coordinate translation tests", function() {
                     chai.assert.ok(gameField.get(posIdx));
                 });
 
+                done();
+            });
+        });
+    });
+
+    describe('GameField.minusX(), move backward along X', function() {
+        it('should move single cube to min X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                gameField.add(3);
+                chai.assert.ok(gameField.get(3));
+                chai.assert.notOk(gameField.get(0));
+
+                gameField.minusX();
+
+                chai.assert.notOk(gameField.get(3));
+                chai.assert.ok(gameField.get(0));
+
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different Z positions to min X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(3, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(3, 0, 1)),
+                    field.posToIdx(new THREE.Vector3(3, 0, 2))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 0, 1)),
+                    field.posToIdx(new THREE.Vector3(0, 0, 2))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'minusX');
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different Y positions to min X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(3, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(3, 1, 0)),
+                    field.posToIdx(new THREE.Vector3(3, 2, 0))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 1, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 2, 0))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'minusX');
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different Y and Z positions to min X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(3, 0, 2)),
+                    field.posToIdx(new THREE.Vector3(3, 1, 1)),
+                    field.posToIdx(new THREE.Vector3(3, 2, 0))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 2)),
+                    field.posToIdx(new THREE.Vector3(0, 1, 1)),
+                    field.posToIdx(new THREE.Vector3(0, 2, 0))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'minusX');
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different X, Y and Z positions to min X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(2, 0, 2)),
+                    field.posToIdx(new THREE.Vector3(3, 1, 1)),
+                    field.posToIdx(new THREE.Vector3(1, 2, 0))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 2)),
+                    field.posToIdx(new THREE.Vector3(0, 1, 1)),
+                    field.posToIdx(new THREE.Vector3(0, 2, 0))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'minusX');
+                done();
+            });
+        });
+
+        it('should not move cubes any further after they are at min X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                gameField.add(3);
+
+                chai.assert.notOk(gameField.get(0));
+                chai.assert.ok(gameField.get(3));
+
+                gameField.minusX();
+
+                chai.assert.ok(gameField.get(0));
+                chai.assert.notOk(gameField.get(3));
+
+                var cubeMesh = gameField.get(0).getMesh();
+                var currPos = {
+                    x: cubeMesh.position.x,
+                    y: cubeMesh.position.y,
+                    z: cubeMesh.position.z
+                };
+
+                gameField.minusX();
+
+                chai.assert.ok(gameField.get(0));
+
+                var newCubeMesh = gameField.get(0).getMesh();
+                var newPos = {
+                    x: newCubeMesh.position.x,
+                    y: newCubeMesh.position.y,
+                    z: newCubeMesh.position.z
+                };
+
+                chai.assert.deepEqual(currPos, newPos);
+
+                done();
+            });
+        });
+
+        it('should not collapse game cubes arbitrarily', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(2, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(3, 0, 0))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(1, 0, 0))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'minusX');
                 done();
             });
         });

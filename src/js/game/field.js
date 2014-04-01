@@ -107,26 +107,70 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
         return false;
     };
 
+    /** Moves cubes in this field along the X axis in the positive direction
+     */
     GameField.prototype.plusX = function() {
+        console.log('GameField.plusX()');
         var newCubes = [];
+
+        var self = this;
 
         this.cubes.forEach(function(c, i) {
             var pos = idxToPos(i);
+
+            var numCubesInFront = 0;
+            var aboveIdx;
+            for (aboveIdx = pos.x + 1; aboveIdx < 4; aboveIdx++) {
+                if (self.cubes[posToIdx(new THREE.Vector3(aboveIdx, pos.y, pos.z))]) {
+                    numCubesInFront++;
+                }
+            }
+
             console.log('Curr pos for idx %s: %s', i, pos.toArray());
-            console.log('Animating, dX: %s', posToCoord(3) - posToCoord(pos.x));
-            c.animate(posToCoord(3) - posToCoord(pos.x), 0, 0);
-            pos.setX(3);
+            console.log('Animating, dX: %s', posToCoord(3 - numCubesInFront) - posToCoord(pos.x));
+
+            c.animate(posToCoord(3 - numCubesInFront) - posToCoord(pos.x), 0, 0);
+            pos.setX(3 - numCubesInFront);
+
             console.log('Setting new idx to %s', posToIdx(pos));
+
             newCubes[posToIdx(pos)] = c;
         });
 
         this.cubes = newCubes;
     };
 
+    /** Moves cubes in this field along the X axis in the negative direction
+     */
     GameField.prototype.minusX = function() {
-        this.cubes.forEach(function(c) {
-            c.animate(-1, 0, 0);
+        console.log('GameField.minusX()');
+        var newCubes = [];
+
+        var self = this;
+
+        this.cubes.forEach(function(c, i) {
+            var pos = idxToPos(i);
+
+            var numCubesInFront = 0;
+            var belowIdx;
+            for (belowIdx = 0; belowIdx < pos.x; belowIdx++) {
+                if (self.cubes[posToIdx(new THREE.Vector3(belowIdx, pos.y, pos.z))]) {
+                    numCubesInFront++;
+                }
+            }
+
+            console.log('Curr pos for idx %s: %s', i, pos.toArray());
+            console.log('Animating, dX: %s', posToCoord(pos.x) - posToCoord(numCubesInFront));
+
+            c.animate(posToCoord(pos.x) - posToCoord(numCubesInFront), 0, 0);
+            pos.setX(numCubesInFront);
+
+            console.log('Setting new idx to %s', posToIdx(pos));
+
+            newCubes[posToIdx(pos)] = c;
         });
+
+        this.cubes = newCubes;
     };
 
     GameField.prototype.plusY = function() {
