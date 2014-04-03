@@ -8,7 +8,8 @@
   "devDependencies": {
     "mocha": "~1.18.2",
     "chai": "~1.9.1",
-    "requirejs": "~2.1.11"
+    "requirejs": "~2.1.11",
+    "sinonjs": "~1.9.0"
   },
   "exportsOverride": {
     "jquery": {
@@ -20,6 +21,9 @@
     "mocha": {
       "js": "mocha.js",
       "css": "mocha.css"
+    },
+    "sinonjs": {
+      "js": "sinon.js"
     },
     "chai": {
       "js": "chai.js"

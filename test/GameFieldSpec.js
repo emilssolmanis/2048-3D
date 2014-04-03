@@ -110,6 +110,25 @@ describe("GameField's coordinate translation tests", function() {
             });
         });
 
+        it('should move cube mesh position forward along X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                gameField.add(0);
+                var oldX = gameField.get(0).getMesh().position.x;
+
+                var clock = sinon.useFakeTimers(0);
+                gameField.plusX();
+                clock.restore();
+                gameField.frame();
+
+                var newX = gameField.get(3).getMesh().position.x;
+
+                chai.assert.operator(oldX, '<', newX);
+
+                done();
+            });
+        });
+
         it('should move multiple cubes with different Z positions to max X', function(done) {
             require(['three', 'game/field'], function(THREE, field) {
                 var gameField = new field.GameField();
@@ -288,6 +307,28 @@ describe("GameField's coordinate translation tests", function() {
             });
         });
 
+        it('should move cube mesh position backward along X', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                var initIdx = field.posToIdx(new THREE.Vector3(3, 0, 0));
+                var targetIdx = field.posToIdx(new THREE.Vector3(0, 0, 0));
+
+                gameField.add(initIdx);
+                var oldX = gameField.get(initIdx).getMesh().position.x;
+
+                var clock = sinon.useFakeTimers(0);
+                gameField.minusX();
+                clock.restore();
+                gameField.frame();
+
+                var newX = gameField.get(targetIdx).getMesh().position.x;
+
+                chai.assert.operator(oldX, '>', newX);
+
+                done();
+            });
+        });
+
         it('should move multiple cubes with different Z positions to min X', function(done) {
             require(['three', 'game/field'], function(THREE, field) {
                 var gameField = new field.GameField();
@@ -448,6 +489,28 @@ describe("GameField's coordinate translation tests", function() {
             });
         });
 
+        it('should move cube mesh position forward along Y', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                var initIdx = field.posToIdx(new THREE.Vector3(0, 0, 0));
+                var targetIdx = field.posToIdx(new THREE.Vector3(0, 3, 0));
+
+                gameField.add(initIdx);
+                var oldY = gameField.get(initIdx).getMesh().position.y;
+
+                var clock = sinon.useFakeTimers(0);
+                gameField.plusY();
+                clock.restore();
+                gameField.frame();
+
+                var newY = gameField.get(targetIdx).getMesh().position.y;
+
+                chai.assert.operator(oldY, '<', newY);
+
+                done();
+            });
+        });
+
         it('should move multiple cubes with different Z positions to max Y', function(done) {
             require(['three', 'game/field'], function(THREE, field) {
                 var gameField = new field.GameField();
@@ -603,6 +666,28 @@ describe("GameField's coordinate translation tests", function() {
 
                 chai.assert.notOk(gameField.get(upperY));
                 chai.assert.ok(gameField.get(0));
+
+                done();
+            });
+        });
+
+        it('should move cube mesh position backward along Y', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                var initIdx = field.posToIdx(new THREE.Vector3(0, 3, 0));
+                var targetIdx = field.posToIdx(new THREE.Vector3(0, 0, 0));
+
+                gameField.add(initIdx);
+                var oldY = gameField.get(initIdx).getMesh().position.y;
+
+                var clock = sinon.useFakeTimers(0);
+                gameField.minusY();
+                clock.restore();
+                gameField.frame();
+
+                var newY = gameField.get(targetIdx).getMesh().position.y;
+
+                chai.assert.operator(oldY, '>', newY);
 
                 done();
             });
@@ -769,6 +854,28 @@ describe("GameField's coordinate translation tests", function() {
             });
         });
 
+        it('should move cube mesh position forward along Z', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                var initIdx = field.posToIdx(new THREE.Vector3(0, 0, 0));
+                var targetIdx = field.posToIdx(new THREE.Vector3(0, 0, 3));
+
+                gameField.add(initIdx);
+                var oldZ = gameField.get(initIdx).getMesh().position.z;
+
+                var clock = sinon.useFakeTimers(0);
+                gameField.plusZ();
+                clock.restore();
+                gameField.frame();
+
+                var newZ = gameField.get(targetIdx).getMesh().position.z;
+
+                chai.assert.operator(oldZ, '<', newZ);
+
+                done();
+            });
+        });
+
         it('should move multiple cubes with different Y positions to max Z', function(done) {
             require(['three', 'game/field'], function(THREE, field) {
                 var gameField = new field.GameField();
@@ -924,6 +1031,28 @@ describe("GameField's coordinate translation tests", function() {
 
                 chai.assert.notOk(gameField.get(upperZ));
                 chai.assert.ok(gameField.get(0));
+
+                done();
+            });
+        });
+
+        it('should move cube mesh position forward along Z', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                var initIdx = field.posToIdx(new THREE.Vector3(0, 0, 3));
+                var targetIdx = field.posToIdx(new THREE.Vector3(0, 0, 0));
+
+                gameField.add(initIdx);
+                var oldZ = gameField.get(initIdx).getMesh().position.z;
+
+                var clock = sinon.useFakeTimers(0);
+                gameField.minusZ();
+                clock.restore();
+                gameField.frame();
+
+                var newZ = gameField.get(targetIdx).getMesh().position.z;
+
+                chai.assert.operator(oldZ, '>', newZ);
 
                 done();
             });

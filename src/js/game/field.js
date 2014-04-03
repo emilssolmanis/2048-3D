@@ -118,7 +118,7 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
 
         var self = this;
 
-        this.cubes.forEach(function(c, i) {
+        this.cubes.forEach(function(cube, i) {
             var pos = idxToPos(i);
 
             var numCubesInFront = 0;
@@ -132,14 +132,17 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
             }
 
             console.log('Curr pos for idx %s: %s', i, pos.toArray());
-            console.log('Animating, dX: %s', posToCoord(3 - numCubesInFront) - posToCoord(pos[axis]));
+            console.log('Animating, d%s: %s', axis.toUpperCase(),
+                    posToCoord(3 - numCubesInFront) - posToCoord(pos[axis]));
 
-            c.animate(posToCoord(3 - numCubesInFront) - posToCoord(pos[axis]), 0, 0);
+            var animDiff = new THREE.Vector3();
+            animDiff['set' + axis.toUpperCase()](posToCoord(3 - numCubesInFront) - posToCoord(pos[axis]));
+            cube.animate(animDiff);
             pos['set' + axis.toUpperCase()](3 - numCubesInFront);
 
             console.log('Setting new idx to %s', posToIdx(pos));
 
-            newCubes[posToIdx(pos)] = c;
+            newCubes[posToIdx(pos)] = cube;
         });
 
         this.cubes = newCubes;
@@ -156,7 +159,7 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
 
         var self = this;
 
-        this.cubes.forEach(function(c, i) {
+        this.cubes.forEach(function(cube, i) {
             var pos = idxToPos(i);
 
             var numCubesInFront = 0;
@@ -164,20 +167,26 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
             for (belowIdx = 0; belowIdx < pos[axis]; belowIdx++) {
                 var posVector = new THREE.Vector3();
                 posVector['set' + axis.toUpperCase()](belowIdx);
+
+                console.log('Checking %s : %s', posVector.toArray(), posToIdx(posVector));
+
                 if (self.cubes[posToIdx(posVector)]) {
+                    console.log('TAKEN!');
                     numCubesInFront++;
                 }
             }
 
             console.log('Curr pos for idx %s: %s', i, pos.toArray());
-            console.log('Animating, dX: %s', posToCoord(pos[axis]) - posToCoord(numCubesInFront));
+            console.log('Animating, d%s: %s', axis.toUpperCase(), posToCoord(pos[axis]) - posToCoord(numCubesInFront));
 
-            c.animate(posToCoord(pos[axis]) - posToCoord(numCubesInFront), 0, 0);
+            var animDiff = new THREE.Vector3();
+            animDiff['set' + axis.toUpperCase()](posToCoord(numCubesInFront) - posToCoord(pos[axis]));
+            cube.animate(animDiff);
             pos['set' + axis.toUpperCase()](numCubesInFront);
 
-            console.log('Setting new idx to %s', posToIdx(pos));
+            console.log('Setting new pos / idx to %s, %s', pos.toArray(), posToIdx(pos));
 
-            newCubes[posToIdx(pos)] = c;
+            newCubes[posToIdx(pos)] = cube;
         });
 
         this.cubes = newCubes;

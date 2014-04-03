@@ -76,11 +76,9 @@ define(['three'], function(THREE) {
 
     /** Moves the cube to a new location over a fixed period of time.
      *
-     * @param dx - The amount of X to move
-     * @param dy - The amount of Y to move
-     * @param dz - The amount of Z to move
+     * @param {THREE.Vector3} d - The difference to move
      */
-    GameCube.prototype.animate = function(dx, dy, dz) {
+    GameCube.prototype.animate = function(d) {
         if (this._animating) {
             return;
         }
@@ -95,9 +93,9 @@ define(['three'], function(THREE) {
                 z: self.mesh.position.z
             },
             deltas: {
-                x: dx / animationLength,
-                y: dy / animationLength,
-                z: dz / animationLength
+                x: d.x / animationLength,
+                y: d.y / animationLength,
+                z: d.z / animationLength
             },
             startTime: new Date().getTime()
         };
