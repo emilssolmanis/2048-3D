@@ -213,10 +213,10 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
         this._positiveMove('z');
     };
 
+    /** Moves cubes in this field along the Z axis in the negative direction
+     */
     GameField.prototype.minusZ = function() {
-        this.cubes.forEach(function(c) {
-            c.animate(0, 0, -1);
-        });
+        this._negativeMove('z');
     };
 
     return {

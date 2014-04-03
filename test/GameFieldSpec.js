@@ -910,4 +910,165 @@ describe("GameField's coordinate translation tests", function() {
             });
         });
     });
+
+    describe('GameField.minusZ(), move backward along Z', function() {
+        it('should move single cube to min Z', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                var upperZ = field.posToIdx(new THREE.Vector3(0, 0, 3));
+                gameField.add(upperZ);
+                chai.assert.ok(gameField.get(upperZ));
+                chai.assert.notOk(gameField.get(0));
+
+                gameField.minusZ();
+
+                chai.assert.notOk(gameField.get(upperZ));
+                chai.assert.ok(gameField.get(0));
+
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different Y positions to min Z', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 3)),
+                    field.posToIdx(new THREE.Vector3(0, 1, 3)),
+                    field.posToIdx(new THREE.Vector3(0, 2, 3))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 1, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 2, 0))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'minusZ');
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different X positions to min Z', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 3)),
+                    field.posToIdx(new THREE.Vector3(1, 0, 3)),
+                    field.posToIdx(new THREE.Vector3(2, 0, 3))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(1, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(2, 0, 0))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'minusZ');
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different X and Y positions to min Z', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 2, 3)),
+                    field.posToIdx(new THREE.Vector3(1, 1, 3)),
+                    field.posToIdx(new THREE.Vector3(2, 0, 3))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 2, 0)),
+                    field.posToIdx(new THREE.Vector3(1, 1, 0)),
+                    field.posToIdx(new THREE.Vector3(2, 0, 0))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'minusZ');
+                done();
+            });
+        });
+
+        it('should move multiple cubes with different X, Y and Z positions to min Z', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 2, 3)),
+                    field.posToIdx(new THREE.Vector3(1, 3, 2)),
+                    field.posToIdx(new THREE.Vector3(2, 1, 1))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 2, 0)),
+                    field.posToIdx(new THREE.Vector3(1, 3, 0)),
+                    field.posToIdx(new THREE.Vector3(2, 1, 0))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'minusZ');
+                done();
+            });
+        });
+
+        it('should not move cubes any further after they are at min Z', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+                var upperZ = field.posToIdx(new THREE.Vector3(0, 0, 3));
+                gameField.add(upperZ);
+
+                chai.assert.notOk(gameField.get(0));
+                chai.assert.ok(gameField.get(upperZ));
+
+                gameField.minusZ();
+
+                chai.assert.ok(gameField.get(0));
+                chai.assert.notOk(gameField.get(upperZ));
+
+                var cubeMesh = gameField.get(0).getMesh();
+                var currPos = {
+                    x: cubeMesh.position.x,
+                    y: cubeMesh.position.y,
+                    z: cubeMesh.position.z
+                };
+
+                gameField.minusZ();
+
+                chai.assert.ok(gameField.get(0));
+
+                var newCubeMesh = gameField.get(0).getMesh();
+                var newPos = {
+                    x: newCubeMesh.position.x,
+                    y: newCubeMesh.position.y,
+                    z: newCubeMesh.position.z
+                };
+
+                chai.assert.deepEqual(currPos, newPos);
+
+                done();
+            });
+        });
+
+        it('should not collapse game cubes arbitrarily', function(done) {
+            require(['three', 'game/field'], function(THREE, field) {
+                var gameField = new field.GameField();
+
+                var startPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 2)),
+                    field.posToIdx(new THREE.Vector3(0, 0, 3))
+                ];
+
+                var targetPositions = [
+                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 0, 1))
+                ];
+
+                testMovement(gameField, startPositions, targetPositions, 'minusZ');
+                done();
+            });
+        });
+    });
+
 });
