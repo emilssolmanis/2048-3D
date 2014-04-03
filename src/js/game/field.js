@@ -124,7 +124,7 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
             var numCubesInFront = 0;
             var aboveIdx;
             for (aboveIdx = pos[axis] + 1; aboveIdx < 4; aboveIdx++) {
-                var posVector = new THREE.Vector3();
+                var posVector = new THREE.Vector3(pos.x, pos.y, pos.z);
                 posVector['set' + axis.toUpperCase()](aboveIdx);
                 if (self.cubes[posToIdx(posVector)]) {
                     numCubesInFront++;
@@ -165,7 +165,7 @@ define(['three', 'game/cube'], function(THREE, GameCube) {
             var numCubesInFront = 0;
             var belowIdx;
             for (belowIdx = 0; belowIdx < pos[axis]; belowIdx++) {
-                var posVector = new THREE.Vector3();
+                var posVector = new THREE.Vector3(pos.x, pos.y, pos.z);
                 posVector['set' + axis.toUpperCase()](belowIdx);
 
                 console.log('Checking %s : %s', posVector.toArray(), posToIdx(posVector));

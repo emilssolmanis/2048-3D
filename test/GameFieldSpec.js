@@ -254,13 +254,13 @@ describe("GameField's coordinate translation tests", function() {
                 var gameField = new field.GameField();
 
                 var startPositions = [
-                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
-                    field.posToIdx(new THREE.Vector3(1, 0, 0))
+                    field.posToIdx(new THREE.Vector3(0, 0, 1)),
+                    field.posToIdx(new THREE.Vector3(1, 0, 1))
                 ];
 
                 var targetPositions = [
-                    field.posToIdx(new THREE.Vector3(2, 0, 0)),
-                    field.posToIdx(new THREE.Vector3(3, 0, 0))
+                    field.posToIdx(new THREE.Vector3(2, 0, 1)),
+                    field.posToIdx(new THREE.Vector3(3, 0, 1))
                 ];
 
                 startPositions.forEach(function(posIdx) {
@@ -455,13 +455,13 @@ describe("GameField's coordinate translation tests", function() {
                 var gameField = new field.GameField();
 
                 var startPositions = [
-                    field.posToIdx(new THREE.Vector3(2, 0, 0)),
-                    field.posToIdx(new THREE.Vector3(3, 0, 0))
+                    field.posToIdx(new THREE.Vector3(2, 1, 2)),
+                    field.posToIdx(new THREE.Vector3(3, 1, 2))
                 ];
 
                 var targetPositions = [
-                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
-                    field.posToIdx(new THREE.Vector3(1, 0, 0))
+                    field.posToIdx(new THREE.Vector3(0, 1, 2)),
+                    field.posToIdx(new THREE.Vector3(1, 1, 2))
                 ];
 
                 testMovement(gameField, startPositions, targetPositions, 'minusX');
@@ -638,13 +638,13 @@ describe("GameField's coordinate translation tests", function() {
                 var gameField = new field.GameField();
 
                 var startPositions = [
-                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
-                    field.posToIdx(new THREE.Vector3(0, 1, 0))
+                    field.posToIdx(new THREE.Vector3(0, 0, 1)),
+                    field.posToIdx(new THREE.Vector3(0, 1, 1))
                 ];
 
                 var targetPositions = [
-                    field.posToIdx(new THREE.Vector3(0, 2, 0)),
-                    field.posToIdx(new THREE.Vector3(0, 3, 0))
+                    field.posToIdx(new THREE.Vector3(0, 2, 1)),
+                    field.posToIdx(new THREE.Vector3(0, 3, 1))
                 ];
 
                 testMovement(gameField, startPositions, targetPositions, 'plusY');
@@ -820,13 +820,13 @@ describe("GameField's coordinate translation tests", function() {
                 var gameField = new field.GameField();
 
                 var startPositions = [
-                    field.posToIdx(new THREE.Vector3(0, 2, 0)),
-                    field.posToIdx(new THREE.Vector3(0, 3, 0))
+                    field.posToIdx(new THREE.Vector3(0, 2, 2)),
+                    field.posToIdx(new THREE.Vector3(0, 3, 2))
                 ];
 
                 var targetPositions = [
-                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
-                    field.posToIdx(new THREE.Vector3(0, 1, 0))
+                    field.posToIdx(new THREE.Vector3(0, 0, 2)),
+                    field.posToIdx(new THREE.Vector3(0, 1, 2))
                 ];
 
                 testMovement(gameField, startPositions, targetPositions, 'minusY');
@@ -1003,13 +1003,13 @@ describe("GameField's coordinate translation tests", function() {
                 var gameField = new field.GameField();
 
                 var startPositions = [
-                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
-                    field.posToIdx(new THREE.Vector3(0, 0, 1))
+                    field.posToIdx(new THREE.Vector3(0, 1, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 1, 1))
                 ];
 
                 var targetPositions = [
-                    field.posToIdx(new THREE.Vector3(0, 0, 2)),
-                    field.posToIdx(new THREE.Vector3(0, 0, 3))
+                    field.posToIdx(new THREE.Vector3(0, 1, 2)),
+                    field.posToIdx(new THREE.Vector3(0, 1, 3))
                 ];
 
                 testMovement(gameField, startPositions, targetPositions, 'plusZ');
@@ -1185,13 +1185,13 @@ describe("GameField's coordinate translation tests", function() {
                 var gameField = new field.GameField();
 
                 var startPositions = [
-                    field.posToIdx(new THREE.Vector3(0, 0, 2)),
-                    field.posToIdx(new THREE.Vector3(0, 0, 3))
+                    field.posToIdx(new THREE.Vector3(0, 3, 2)),
+                    field.posToIdx(new THREE.Vector3(0, 3, 3))
                 ];
 
                 var targetPositions = [
-                    field.posToIdx(new THREE.Vector3(0, 0, 0)),
-                    field.posToIdx(new THREE.Vector3(0, 0, 1))
+                    field.posToIdx(new THREE.Vector3(0, 3, 0)),
+                    field.posToIdx(new THREE.Vector3(0, 3, 1))
                 ];
 
                 testMovement(gameField, startPositions, targetPositions, 'minusZ');
